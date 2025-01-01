@@ -14,7 +14,7 @@ app = Flask(__name__)
 os.environ["GOOGLE_API_KEY"] = "AIzaSyDzLtb6wqyogXc8DMCjJWVhvi1o8cIkrvM"  # Replace with your actual API key or use environment setup
 
 # Load documents and setup embeddings
-pdf_path = 'satic/chst.pdf'  # Ensure this path is correct and the PDF exists here
+pdf_path = 'satic/ilovepdf_merged.pdf'  # Ensure this path is correct and the PDF exists here
 loader = PyPDFLoader(pdf_path)
 data = loader.load()
 
