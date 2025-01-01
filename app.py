@@ -57,4 +57,4 @@ def ask():
     return jsonify({'response': answer})
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='13.201.78.220', debug=True)
