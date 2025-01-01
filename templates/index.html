@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Assistant</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Ask the College Assistant</h1>
+        <form id="question-form">
+            <div class="form-group">
+                <label for="question">Enter your question:</label>
+                <input type="text" class="form-control" id="question" name="question" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Ask</button>
+        </form>
+        <div class="mt-4" id="response-container" style="display: none;">
+            <h4>Response:</h4>
+            <p id="response-text"></p>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $('#question-form').on('submit', function(e) {
+                e.preventDefault();
+                const question = $('#question').val();
+                $.ajax({
+                    type: 'POST',
+                    url: '/ask',
+                    data: { question: question },
+                    success: function(response) {
+                        // Display the answer in the response container
+                        const answer = response.response;  // Extract the 'response' key value
+                        $('#response-text').text(answer);
+                        $('#response-container').show();
+                    },
+                    error: function() {
+                        $('#response-text').text('An error occurred. Please try again.');
+                        $('#response-container').show();
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

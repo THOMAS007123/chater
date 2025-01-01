@@ -1,0 +1,16 @@
+ pypdf
+
+ chromadb
+
+ langchain_community
+
+
+ langchain_google_genai
+
+ langchain-google-genai
+
+ python-dotenv
+
+ langchain-experimental
+
+ psycopg2-binary
