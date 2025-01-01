@@ -25,7 +25,7 @@ embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001", google_a
 vectorstore = Chroma.from_documents(documents=docs, embedding=embeddings)
 retriever = vectorstore.as_retriever(search_type="similarity", search_kwargs={"k": 10})
 
-llm = ChatGoogleGenerativeAI(model="gemini-1.5-pro", temperature=0.3, max_tokens=500, google_api_key=os.getenv("GOOGLE_API_KEY"))
+llm = ChatGoogleGenerativeAI(model="gemini-1.5-flash", temperature=0.3, max_tokens=500, google_api_key=os.getenv("GOOGLE_API_KEY"))
 
 system_prompt = (
     "You are a friendly and knowledgeable assistant designed to help with inquiries about the college. Provide clear and accurate answers based on the provided context. If exact information isn't available, respond positively, offering alternatives or highlighting related facilities. For example, if the college lacks a certain amenity, such as a swimming pool, emphasize other available facilities or services. Keep responses concise, with up to three sentences."
