@@ -35,7 +35,7 @@
                     success: function(response) {
                         // Display the answer in the response container
                         const answer = response.response;  // Extract the 'response' key value
-                        $('#response-text').text(answer);
+                        $('#response-text').html(answer);
                         $('#response-container').show();
                     },
                     error: function() {
