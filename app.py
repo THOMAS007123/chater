@@ -36,9 +36,9 @@ with app.app_context():
 os.environ["GOOGLE_API_KEY"] = "AIzaSyDzLtb6wqyogXc8DMCjJWVhvi1o8cIkrvM"  # Replace with your actual API key
 
 # Load documents and setup embeddings
-faculty = pd.read_csv("satic/Faculty_details - faculty_datanew (1) - Faculty_details - faculty_datanew (1).csv")
+faculty = pd.read_csv("static/Faculty_details - faculty_datanew.csv")
 faculty_str = faculty.to_string()
-pdf_path = 'satic/Alwin_merged_merged_merged.pdf'  # Ensure this path is correct and the PDF exists here
+pdf_path = 'static/Alwin_merged_merged_merged.pdf'  # Ensure this path is correct and the PDF exists here
 loader = PyPDFLoader(pdf_path)
 data = loader.load()
 
@@ -64,7 +64,9 @@ system_prompt = (
     "cse and cse(ai) are separate departments."
     "cse(ai) and cse(ds) are same department."
     "ug cousrses"
-    "college has vending machine"
+    '''BTECH OR UG ADMISSION PROCEDURE:For both management and government quotas, candidates must be Indian citizens and at least 17 years old  (no exemptions). Applicants must have passed the Higher Secondary Examination of the Kerala Board or an equivalent exam with a minimum of 45% aggregate in Physics, Chemistry, and Mathematics (PCM), without rounding off marks. Additionally, candidates must qualify in the Engineering Entrance Exam conducted by the Commissioner of Entrance Exams, Kerala.'''
+    
+    "ASIET have achieved 5th rank in the Kerala institutional ranking framework (KIRF) 2024 among all self financing colleges"
     f"If anyone asks about a faculty member's publications or research area, provide the information from {faculty_str}. Additionally, include the profile link for more details. The profile link can be found in {faculty_str}."
     "Adi Shankara Institute of Engineering and Technology (ASIET) offers the following courses: Civil Engineering, Computer Science & Engineering, Computer Science & Engineering (Artificial Intelligence), Computer Science & Engineering (Data Science), Electronics & Biomedical Engineering, Electronics & Communication Engineering, Electrical & Electronics Engineering, Mechanical Engineering, and Robotics and Automation,MCA,MTech"
     "Beautify the output"
