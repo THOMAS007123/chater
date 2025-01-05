@@ -14,3 +14,7 @@
  langchain-experimental
 
  psycopg2-binary
+
+
+
+flask-sqlalchemy
