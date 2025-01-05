@@ -64,6 +64,7 @@ system_prompt = (
     "cse and cse(ai) are separate departments."
     "cse(ai) and cse(ds) are same department."
     "ug cousrses"
+    "college has vending machine"
     f"If anyone asks about a faculty member's publications or research area, provide the information from {faculty_str}. Additionally, include the profile link for more details. The profile link can be found in {faculty_str}."
     "Adi Shankara Institute of Engineering and Technology (ASIET) offers the following courses: Civil Engineering, Computer Science & Engineering, Computer Science & Engineering (Artificial Intelligence), Computer Science & Engineering (Data Science), Electronics & Biomedical Engineering, Electronics & Communication Engineering, Electrical & Electronics Engineering, Mechanical Engineering, and Robotics and Automation,MCA,MTech"
     "Beautify the output"
