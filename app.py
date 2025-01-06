@@ -36,9 +36,9 @@ with app.app_context():
 os.environ["GOOGLE_API_KEY"] = "AIzaSyDzLtb6wqyogXc8DMCjJWVhvi1o8cIkrvM"  # Replace with your actual API key
 
 # Load documents and setup embeddings
-faculty = pd.read_csv("satic/Faculty_details - faculty_datanew (1) - Faculty_details - faculty_datanew (1).csv")
+faculty = pd.read_csv("static/Faculty_details - faculty_datanew.csv")
 faculty_str = faculty.to_string()
-pdf_path = 'satic/ilovepdf_merged (1).pdf'  # Ensure this path is correct and the PDF exists here
+pdf_path = 'static/Alwin_merged_merged_merged.pdf'  # Ensure this path is correct and the PDF exists here
 loader = PyPDFLoader(pdf_path)
 data = loader.load()
 
@@ -49,11 +49,11 @@ embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001", google_a
 vectorstore = Chroma.from_documents(documents=docs, embedding=embeddings)
 retriever = vectorstore.as_retriever(search_type="similarity", search_kwargs={"k": 10})
 
-llm = ChatGoogleGenerativeAI(model="gemini-1.5-flash", temperature=0.3, max_tokens=500, google_api_key=os.getenv("GOOGLE_API_KEY"))
+llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash-exp", temperature=0, max_tokens=500, google_api_key=os.getenv("GOOGLE_API_KEY"))
 
 system_prompt = (
     '''College is accredited with naac "A" Grade.'''
-     "You are a friendly and knowledgeable assistant designed to help with inquiries about the college for Adi Shankara Institute of Engineering and Technology. Provide clear and accurate answers based on the   provided context. If exact information isn't available, respond positively, offering alternatives or highlighting related facilities. For example, if the college lacks a certain amenity, such as a swimming pool, emphasize other available facilities or services. Keep responses concise, with up to three sentences."
+     "You are a friendly and knowledgeable assistant designed to help with inquiries about the college for Adi Shankara Institute of Engineering and Technology. Provide clear and accurate answers based on the   provided context. If exact information isn't available, respond positively, offering alternatives or highlighting related facilities. For example, if the college lacks a certain amenity, such as a swimming pool, emphasize other available facilities or services. Keep responses concise"
     "\n\n"
     "Context: {context}"
     "cse == cs, that is it is same department. Do not give separate answers when asked about both"
@@ -63,11 +63,10 @@ system_prompt = (
     "Beautify with spaces and start in new line when necessary."
     "cse and cse(ai) are separate departments."
     "cse(ai) and cse(ds) are same department."
+    
     "ug cousrses"
-    '''This is Admission procedure details for BTECH OR UG ADMISSION PROCEDURE:For both management and government quotas, candidates must be Indian citizens and at least 17 years old  (no exemptions). Applicants must have passed the Higher Secondary Examination of the Kerala Board or an equivalent exam with a minimum of 45% aggregate in Physics, Chemistry, and Mathematics (PCM), without rounding off marks. Additionally, candidates must qualify in the Engineering Entrance Exam conducted by the Commissioner of Entrance Exams, Kerala.'''
-    "The college working hours are from 8:50 AM to 4:00 PM."
-
-
+    '''BTECH OR UG ADMISSION PROCEDURE:For both management and government quotas, candidates must be Indian citizens and at least 17 years old  (no exemptions). Applicants must have passed the Higher Secondary Examination of the Kerala Board or an equivalent exam with a minimum of 45% aggregate in Physics, Chemistry, and Mathematics (PCM), without rounding off marks. Additionally, candidates must qualify in the Engineering Entrance Exam conducted by the Commissioner of Entrance Exams, Kerala.'''
+    
     "ASIET have achieved 5th rank in the Kerala institutional ranking framework (KIRF) 2024 among all self financing colleges"
     f"If anyone asks about a faculty member's publications or research area, provide the information from {faculty_str}. Additionally, include the profile link for more details. The profile link can be found in {faculty_str}."
     "Adi Shankara Institute of Engineering and Technology (ASIET) offers the following courses: Civil Engineering, Computer Science & Engineering, Computer Science & Engineering (Artificial Intelligence), Computer Science & Engineering (Data Science), Electronics & Biomedical Engineering, Electronics & Communication Engineering, Electrical & Electronics Engineering, Mechanical Engineering, and Robotics and Automation,MCA,MTech"
@@ -77,6 +76,7 @@ system_prompt = (
     for example: "Gayathri Dili is an Assistant Professor in the Computer Science and Engineering (Artificial Intelligence) department at ASIET. You can find her profile at <a href='https://www.adishankara.ac.in/department/faculty/314'>Profile</a> for more information."
         '''
     '''If a question is asked about any person, search for their name in the faculty list and provide their profile link if available. For any other topic, include a relevant link, ensuring that every URL is enclosed within an <a></a> tag.'''
+    "give outputs in html elements and beautify ouput"
 )
 
 prompt = ChatPromptTemplate.from_messages(
