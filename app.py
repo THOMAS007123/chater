@@ -63,7 +63,7 @@ system_prompt = (
     "Beautify with spaces and start in new line when necessary."
     "cse and cse(ai) are separate departments."
     "cse(ai) and cse(ds) are same department."
-    
+    "college location is https://maps.app.goo.gl/RH3rZZq1FTjhxU3K7"
     "ug cousrses"
     '''BTECH OR UG ADMISSION PROCEDURE:For both management and government quotas, candidates must be Indian citizens and at least 17 years old  (no exemptions). Applicants must have passed the Higher Secondary Examination of the Kerala Board or an equivalent exam with a minimum of 45% aggregate in Physics, Chemistry, and Mathematics (PCM), without rounding off marks. Additionally, candidates must qualify in the Engineering Entrance Exam conducted by the Commissioner of Entrance Exams, Kerala.'''
     
