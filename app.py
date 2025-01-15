@@ -1,8 +1,8 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, session
 from langchain_community.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_google_genai import GoogleGenerativeAIEmbeddings, ChatGoogleGenerativeAI
-from langchain_community.vectorstores import Chroma  # Updated import
+from langchain_community.vectorstores import Chroma
 from langchain.chains import create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_core.prompts import ChatPromptTemplate
@@ -17,6 +17,9 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://ChatBotLog_owner:01YZFuoOg
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
+
+# Secret key for session
+app.secret_key = 'your_secret_key'
 
 # Define a model to store questions and responses
 class QAHistory(db.Model):
@@ -33,12 +36,12 @@ with app.app_context():
     db.create_all()
 
 # Load environment variables
-os.environ["GOOGLE_API_KEY"] = "AIzaSyDzLtb6wqyogXc8DMCjJWVhvi1o8cIkrvM"  # Replace with your actual API key
+os.environ["GOOGLE_API_KEY"] = "AIzaSyDzLtb6wqyogXc8DMCjJWVhvi1o8cIkrvM"
 
-# Load documents and setup embeddings
-faculty = pd.read_csv("satic/Faculty_details - faculty_datanew (1) - Faculty_details - faculty_datanew (1).csv")
+# Load faculty details and documents
+faculty = pd.read_csv("static/Faculty_details - faculty_datanew.csv")
 faculty_str = faculty.to_string()
-pdf_path = 'satic/Alwin_merged_merged_merged.pdf'  # Ensure this path is correct and the PDF exists here
+pdf_path = 'static/Alwin_merged_merged_merged.pdf'
 loader = PyPDFLoader(pdf_path)
 data = loader.load()
 
@@ -63,6 +66,7 @@ system_prompt = (
     "Beautify with spaces and start in new line when necessary."
     "cse and cse(ai) are separate departments."
     "cse(ai) and cse(ds) are same department."
+    "college time is 8:50am to 4:00pm .in friday time is 8:50 am to 4:10 pm"
     "college location is https://maps.app.goo.gl/RH3rZZq1FTjhxU3K7"
     "ug cousrses"
     '''BTECH OR UG ADMISSION PROCEDURE:For both management and government quotas, candidates must be Indian citizens and at least 17 years old  (no exemptions). Applicants must have passed the Higher Secondary Examination of the Kerala Board or an equivalent exam with a minimum of 45% aggregate in Physics, Chemistry, and Mathematics (PCM), without rounding off marks. Additionally, candidates must qualify in the Engineering Entrance Exam conducted by the Commissioner of Entrance Exams, Kerala.'''
@@ -77,6 +81,8 @@ system_prompt = (
         '''
     '''If a question is asked about any person, search for their name in the faculty list and provide their profile link if available. For any other topic, include a relevant link, ensuring that every URL is enclosed within an <a></a> tag.'''
     "give outputs in html elements and beautify ouput"
+    "This ChatBot is developed by students of AI DEPARTMENT under the mentorship of CTO"
+    
 )
 
 prompt = ChatPromptTemplate.from_messages(
@@ -91,20 +97,48 @@ rag_chain = create_retrieval_chain(retriever, question_answer_chain)
 
 @app.route('/')
 def home():
+    # Automatically reset memory when the page is loaded
+    session['memory'] = []  # Clear the chat memory
     return render_template('index.html')
 
 @app.route('/ask', methods=['POST'])
 def ask():
     question = request.form['question']
-    response = rag_chain.invoke({"input": question})
-    answer = response['answer']  # Extract the answer from the response object
 
-    # Save the question and answer to the database
-    new_qa = QAHistory(question=question, response=answer)
-    db.session.add(new_qa)
-    db.session.commit()
+    # Ensure memory is initialized
+    if 'memory' not in session:
+        session['memory'] = []
+
+    # Retrieve the user's memory from their session
+    user_memory = session['memory']
+
+    # Combine memory context with the question
+    memory_context = "\n".join(f"Q: {qa['question']} A: {qa['answer']}" for qa in user_memory)
+    combined_context = f"{memory_context}\n{question}"
+
+    # Get response from RAG chain
+    response = rag_chain.invoke({"input": combined_context})
+    answer = response['answer']  # Extract the answer
+    if answer.startswith("```html"):
+        answer = answer[7:]
+    if answer.endswith("```"):
+        answer = answer[:-3]
+
+    # Update the user's memory
+    user_memory.append({"question": question.lower(), "answer": answer})
+    if len(user_memory) > 5:  # Keep memory size limited
+        user_memory.pop(0)
+    session['memory'] = user_memory  # Save updated memory back to session
+    try:
+        new_qa = QAHistory(question=question, response=answer)
+        db.session.add(new_qa)
+        db.session.commit()
+    except:
+        new_qa = QAHistory(question=question, response=answer)
+        db.session.add(new_qa)
+        db.session.commit()
 
     return jsonify({'response': answer})
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0',debug=True)
+    app.run(host='0.0.0.0', debug=True)
