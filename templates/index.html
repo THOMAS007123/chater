@@ -6,9 +6,93 @@
     <title>College Assistant</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <style>
+        .note {
+            padding: 5px;
+            background-color: #FFCFCF;
+            width: auto;
+            height: auto;
+            color: #D84040;
+            border-radius: 5px;
+            border-color: #D84040;
+            align-items: center;
+            text-align: center;
+            margin-top: 7px;
+            margin-bottom: 40px;
+        }
+        .popup-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 30%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 1);
+            z-index: 1000;
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
+        }
+        .popup-container.fullscreen {
+            width: 100%;
+        }
+        .popup {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        .popup iframe {
+            width: 100%;
+            height: 110%;
+            border: none;
+        }
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: red;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            font-size: 16px;
+            text-align: center;
+            line-height: 30px;
+            cursor: pointer;
+        }
+        .top-right-btn {
+            position: absolute;
+            top: 30px;
+            right: 40px;
+            z-index: 100;
+        }
+        .container {
+            transition: margin-right 0.3s ease;
+        }
+        .container.shrink {
+            margin-right: 30%;
+            width:auto;
+        }
+        @media (max-width: 768px) {
+            .popup-container {
+                width: 100%;
+            }
+            .container.shrink {
+                margin-right: 0;
+            }
+            .top-right-btn {
+            position: absolute;
+            top: 5px;
+            right: 15px;
+            z-index: 100;
+        }
+        }
+    </style>
 </head>
 <body>
-    <div class="container mt-5">
+    <button class="btn btn-info top-right-btn" id="open-popup">Comment</button>
+
+    <div class="container mt-5" id="main-container">
+        <div class="note">Note: This is a testing version of the website. The current design and features are not final and are subject to change in the final release.</div>
         <h1 class="text-center">Ask the College Assistant</h1>
         <form id="question-form">
             <div class="form-group">
@@ -19,12 +103,21 @@
         </form>
         <div class="mt-4" id="response-container" style="display: none;">
             <h4>Response:</h4>
-            <p id="response-text"></p>
+            <p id="response-text">
+        </div>
+    </div>
+
+    <!-- Popup Container -->
+    <div class="popup-container" id="popup-container">
+        <div class="popup">
+            <button class="close-btn" id="close-popup">&times;</button>
+            <iframe src="https://web-chat-app-ebon.vercel.app/" title="Chat"></iframe>
         </div>
     </div>
 
     <script>
         $(document).ready(function() {
+            // Handle the form submission
             $('#question-form').on('submit', function(e) {
                 e.preventDefault();
                 const question = $('#question').val();
@@ -43,6 +136,23 @@
                         $('#response-container').show();
                     }
                 });
+            });
+
+            // Open the popup
+            $('#open-popup').on('click', function() {
+                if (window.innerWidth <= 768) {
+                    $('#popup-container').addClass('fullscreen');
+                } else {
+                    $('#main-container').addClass('shrink');
+                }
+                $('#popup-container').fadeIn();
+            });
+
+            // Close the popup
+            $('#close-popup').on('click', function() {
+                $('#popup-container').fadeOut();
+                $('#popup-container').removeClass('fullscreen');
+                $('#main-container').removeClass('shrink');
             });
         });
     </script>
