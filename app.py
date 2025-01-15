@@ -39,9 +39,9 @@ with app.app_context():
 os.environ["GOOGLE_API_KEY"] = "AIzaSyDzLtb6wqyogXc8DMCjJWVhvi1o8cIkrvM"
 
 # Load faculty details and documents
-faculty = pd.read_csv("static/Faculty_details - faculty_datanew.csv")
+faculty = pd.read_csv("satic/Faculty_details - faculty_datanew.csv")
 faculty_str = faculty.to_string()
-pdf_path = 'static/Alwin_merged_merged_merged.pdf'
+pdf_path = 'satic/Alwin_merged_merged_merged.pdf'
 loader = PyPDFLoader(pdf_path)
 data = loader.load()
 
