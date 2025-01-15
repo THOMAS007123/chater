@@ -64,6 +64,16 @@
             top: 30px;
             right: 40px;
             z-index: 100;
+            background:white;
+            border:1px solid white;
+        }
+        .top-right-btn:hover {
+            position: absolute;
+            top: 30px;
+            right: 40px;
+            z-index: 100;
+            background:white;
+            border:1px solid white;
         }
         .container {
             transition: margin-right 0.3s ease;
@@ -84,12 +94,16 @@
             top: 5px;
             right: 15px;
             z-index: 100;
+            
         }
+       
         }
     </style>
 </head>
 <body>
-    <button class="btn btn-info top-right-btn" id="open-popup">Comment</button>
+    <button class="btn btn-info top-right-btn" id="open-popup">
+        <img src="/static/comments.png" alt="Comment" style="width: 50px; height: 50px;">
+    </button>
 
     <div class="container mt-5" id="main-container">
         <div class="note">Note: This is a testing version of the website. The current design and features are not final and are subject to change in the final release.</div>
@@ -103,7 +117,7 @@
         </form>
         <div class="mt-4" id="response-container" style="display: none;">
             <h4>Response:</h4>
-            <p id="response-text">
+            <p id="response-text">Gayathri Dili is an Assistant Professor in the Computer Science and Engineering (Artificial Intelligence) department at ASIET. You can find her profile at <a href='https://www.adishankara.ac.in/department/faculty/314'>Profile</a> for more information.</p>
         </div>
     </div>
 
@@ -111,6 +125,8 @@
     <div class="popup-container" id="popup-container">
         <div class="popup">
             <button class="close-btn" id="close-popup">&times;</button>
+            
+            
             <iframe src="https://web-chat-app-ebon.vercel.app/" title="Chat"></iframe>
         </div>
     </div>
